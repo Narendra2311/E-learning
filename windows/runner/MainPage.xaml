@@ -1,0 +1,14 @@
+<ApplicationView
+    x:Class="Runner.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+>
+
+    <!-- Add this line to enable the OnBackRequested callback -->
+    <ApplicationView.BackRequested>
+        <BackRequestedEventHandler OnBackRequested="OnBackRequested"/>
+    </ApplicationView.BackRequested>
+
+    <!-- Other existing XAML code -->
+
+</ApplicationView>
