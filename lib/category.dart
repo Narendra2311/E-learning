@@ -67,7 +67,7 @@ class _CategoryState extends State<Category> {
 
   Future<void> fetchData() async {
     final url = Uri.parse(
-        'https://ff7e-2405-201-2009-d9ed-913b-844b-9334-2774.ngrok-free.app/viewcategories');
+        'https://ce16-2405-201-2009-d9ed-c07d-419f-a8aa-604.ngrok-free.app/viewcategories');
 
     try {
       final response = await http.get(url);

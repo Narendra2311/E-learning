@@ -48,7 +48,7 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
 
   Future<void> fetchData() async {
     final url = Uri.parse(
-        'https://ff7e-2405-201-2009-d9ed-913b-844b-9334-2774.ngrok-free.app/subcategories/${widget.categoryId}');
+        'https://ce16-2405-201-2009-d9ed-c07d-419f-a8aa-604.ngrok-free.app/subcategories/${widget.categoryId}');
 
     try {
       final response = await http.get(url);
@@ -121,7 +121,7 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
       elevation: 5.0,
       margin: const EdgeInsets.symmetric(vertical: 8.0),
       child: Container(
-        height: 250,
+        height: 250, 
         width: double.infinity,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
