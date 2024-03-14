@@ -1,6 +1,7 @@
-// ignore_for_file: library_private_types_in_public_api, avoid_print, sized_box_for_whitespace
+// ignore_for_file: library_private_types_in_public_api, avoid_print, sized_box_for_whitespace, use_super_parameters
 
 import 'dart:convert';
+import 'package:e_learning/recipes.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -31,7 +32,7 @@ class SubCategory {
 class SubCategoryPage extends StatefulWidget {
   final String categoryId;
 
-  const SubCategoryPage({super.key, required this.categoryId});
+  const SubCategoryPage({Key? key, required this.categoryId}) : super(key: key);
 
   @override
   _SubCategoryPageState createState() => _SubCategoryPageState();
@@ -48,7 +49,7 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
 
   Future<void> fetchData() async {
     final url = Uri.parse(
-        'https://ce16-2405-201-2009-d9ed-c07d-419f-a8aa-604.ngrok-free.app/subcategories/${widget.categoryId}');
+        'https://148c-2405-201-2009-d9ed-f1c1-3eb2-88c7-7fdf.ngrok-free.app/subcategories/${widget.categoryId}');
 
     try {
       final response = await http.get(url);
@@ -97,10 +98,22 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
                 shrinkWrap: true,
                 itemCount: subCategories.length,
                 itemBuilder: (context, index) {
-                  return _buildCard(
-                    subCategories[index].name,
-                    subCategories[index].imageUrl,
-                    subCategories[index].description,
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Recipes(
+                            subCategoryId: subCategories[index].id,
+                          ),
+                        ),
+                      );
+                    },
+                    child: _buildCard(
+                      subCategories[index].name,
+                      subCategories[index].imageUrl,
+                      subCategories[index].description,
+                    ),
                   );
                 },
               ),
@@ -117,11 +130,22 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),
       ),
-      color: Colors.white,
       elevation: 5.0,
       margin: const EdgeInsets.symmetric(vertical: 8.0),
       child: Container(
-        height: 250, 
+        decoration: BoxDecoration(
+          color: Colors.white, // Set the background color to white
+          borderRadius: BorderRadius.circular(16.0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: const Offset(0, 3), // changes position of shadow
+            ),
+          ],
+        ),
+        height: 250,
         width: double.infinity,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -162,8 +186,8 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
                       fontSize: 12,
                       color: Colors.grey,
                     ),
-                    maxLines: 2, // Add this line to limit to 2 lines
-                    overflow: TextOverflow.ellipsis, // Add this line
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),

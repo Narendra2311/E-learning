@@ -67,7 +67,7 @@ class _CategoryState extends State<Category> {
 
   Future<void> fetchData() async {
     final url = Uri.parse(
-        'https://ce16-2405-201-2009-d9ed-c07d-419f-a8aa-604.ngrok-free.app/viewcategories');
+        'https://148c-2405-201-2009-d9ed-f1c1-3eb2-88c7-7fdf.ngrok-free.app/viewcategories');
 
     try {
       final response = await http.get(url);
@@ -152,7 +152,6 @@ class _CategoryState extends State<Category> {
   Widget buildCard(CategoryData category, int index) {
     return GestureDetector(
       onTap: () {
-        print('Category: $category');
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -188,9 +187,8 @@ class _CategoryState extends State<Category> {
                   boxFit: BoxFit.cover,
                   imageUrl: category.imageUrl,
                   errorWidget: Container(
-                    height: 150.0, // Set the height to match the container
-                    width:
-                        double.infinity, // Set the width to match the container
+                    height: 150.0,
+                    width: double.infinity,
                     child: Image.asset(
                       "assets/images/error.png",
                       fit: BoxFit.cover,
@@ -221,7 +219,6 @@ class _CategoryState extends State<Category> {
                         fontSize: 12.0,
                         color: Colors.grey,
                       ),
-                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ],

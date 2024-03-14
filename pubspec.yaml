@@ -34,6 +34,8 @@ dependencies:
   page_view_indicators: ^2.0.0
   smooth_page_indicator: ^1.1.0
   cupertino_icons: ^1.0.2
+  video_player: ^2.8.3
+  flick_video_player: ^0.7.0
   http : ^1.2.0
   emoji_picker_flutter: ^2.0.0
 
@@ -116,7 +118,7 @@ flutter:
     - assets/food/recipe6.jpg
     - assets/food/recipe7.jpg
     - assets/food/recipe8.jpg
-
+    - assets/videos/cake.mp4
     - assets/Banner/Banner1.jpg
     - assets/Banner/Banner2.jpg
     - assets/Banner/Banner3.jpg
