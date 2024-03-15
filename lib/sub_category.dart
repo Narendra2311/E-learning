@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 import 'package:e_learning/recipes.dart';
+import 'package:e_learning/src/service/api.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -48,8 +49,7 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
   }
 
   Future<void> fetchData() async {
-    final url = Uri.parse(
-        'https://148c-2405-201-2009-d9ed-f1c1-3eb2-88c7-7fdf.ngrok-free.app/subcategories/${widget.categoryId}');
+    final url = Uri.parse('${API.baseUrl}/subcategories/${widget.categoryId}');
 
     try {
       final response = await http.get(url);

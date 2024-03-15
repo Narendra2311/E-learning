@@ -1,11 +1,56 @@
+import 'package:e_learning/src/service/api.dart';
+import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flick_video_player/flick_video_player.dart';
 import 'package:video_player/video_player.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+class Recipedetails {
+  final String id;
+  final String title;
+  final String description;
+  final String imageUrl;
+  final String ingredients;
+  final String nutrition;
+  final String cookingtime;
+  final String Recipevideo;
+
+  Recipedetails({
+    required this.id,
+    required this.title,
+    required this.description,
+    required this.imageUrl,
+    required this.ingredients,
+    required this.nutrition,
+    required this.cookingtime,
+    required this.Recipevideo,
+  });
+
+  factory Recipedetails.fromJson(Map<String, dynamic> json) {
+    return Recipedetails(
+      id: json['Recipe_id']?.toString() ??
+          'N/A', // Ensure that id is converted to string
+      title: json['Recipe_Title'] as String? ?? '',
+      description: json['Recipe_Description'] as String? ?? '',
+      imageUrl: json['Recipe_Thumbnail'] as String? ?? '',
+      ingredients: json['Recipe_Ingredients'] as String? ?? '',
+      nutrition: json['Recipe_Nutritional_Info'] as String? ?? '',
+      cookingtime: json['Recipe_Cooking_Time']?.toString() ?? '',
+      Recipevideo: json['Recipe_Url']?.toString() ?? '',
+    );
+  }
+}
 
 class RecipeDetails extends StatefulWidget {
+  final String subCategoryId;
   final String recipeId;
 
-  const RecipeDetails({Key? key, required this.recipeId}) : super(key: key);
+  const RecipeDetails({
+    super.key,
+    required this.subCategoryId,
+    required this.recipeId,
+  });
 
   @override
   State<RecipeDetails> createState() => _RecipeDetailsState();
@@ -13,21 +58,47 @@ class RecipeDetails extends StatefulWidget {
 
 class _RecipeDetailsState extends State<RecipeDetails> {
   late FlickManager flickManager;
+  List<Recipedetails> Recipedetail = [];
 
+  @override
   @override
   void initState() {
     super.initState();
-    flickManager = FlickManager(
-      videoPlayerController: VideoPlayerController.asset(
-        'assets/videos/cake.mp4',
-      ),
-    );
+    fetchData();
   }
 
   @override
   void dispose() {
     flickManager.dispose();
     super.dispose();
+  }
+
+  Future<void> fetchData() async {
+    final url = Uri.parse(
+        '${API.baseUrl}/recipes/subcategory/${widget.subCategoryId}/${widget.recipeId}');
+
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        setState(() {
+          Recipedetail = [
+            Recipedetails.fromJson(data)
+          ]; // Wrap the single data item in a list
+          // Initialize flickManager with the retrieved video URL
+          flickManager = FlickManager(
+            videoPlayerController: VideoPlayerController.network(
+              Recipedetail[0].Recipevideo.toString(), // Convert Uri to String
+            ),
+          );
+        });
+      } else {
+        print('Failed to load data. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching data: $e');
+    }
   }
 
   @override
@@ -81,10 +152,20 @@ class _RecipeDetailsState extends State<RecipeDetails> {
             left: 0,
             right: 0,
             height: 500,
-            child: Image.asset(
-              'assets/food/Indian3.jpg',
-              fit: BoxFit.cover,
-            ),
+            child: Recipedetail.isNotEmpty
+                ? FancyShimmerImage(
+                    boxFit: BoxFit.cover,
+                    errorWidget: Image.asset(
+                      "assets/images/error.png",
+                      height: double.infinity,
+                      width: double.infinity,
+                    ),
+                    imageUrl: Recipedetail[0].imageUrl,
+                  )
+                : Container(
+                    color: Colors.grey, // Placeholder color while loading
+                    // You can add loading indicator or any placeholder widget here
+                  ),
           ),
           Positioned.fill(
             child: Center(
@@ -143,13 +224,25 @@ class _RecipeDetailsState extends State<RecipeDetails> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildTitleAndFavoriteIcon(),
+                    _buildTitleAndFavoriteIcon(
+                      recipeTitle:
+                          Recipedetail.isNotEmpty ? Recipedetail[0].title : '',
+                      cooktime: Recipedetail.isNotEmpty
+                          ? Recipedetail[0].cookingtime
+                          : '',
+                    ),
                     const SizedBox(height: 8),
-                    _buildRecipeDescription(),
+                    _buildRecipeDescription(Recipedetail.isNotEmpty
+                        ? Recipedetail[0].description
+                        : ''),
                     const SizedBox(height: 16),
-                    _buildIngredients(),
+                    _buildIngredients(Recipedetail.isNotEmpty
+                        ? Recipedetail[0].ingredients
+                        : ''),
                     const SizedBox(height: 16),
-                    _buildNutrition(),
+                    _buildNutrition(Recipedetail.isNotEmpty
+                        ? Recipedetail[0].nutrition
+                        : ''),
                     const SizedBox(height: 16),
                   ],
                 ),
@@ -161,22 +254,23 @@ class _RecipeDetailsState extends State<RecipeDetails> {
     );
   }
 
-  Widget _buildTitleAndFavoriteIcon() {
+  Widget _buildTitleAndFavoriteIcon(
+      {required String recipeTitle, required String cooktime}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         RichText(
-          text: const TextSpan(
-            text: 'Recipe Title ',
-            style: TextStyle(
+          text: TextSpan(
+            text: recipeTitle,
+            style: const TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
               color: Colors.black, // Adjust the color if needed
             ),
             children: [
               TextSpan(
-                text: '(45min)',
-                style: TextStyle(
+                text: ' ($cooktime)',
+                style: const TextStyle(
                   fontSize: 14,
                   color: Color(0xFFEF6C00),
                 ),
@@ -194,65 +288,57 @@ class _RecipeDetailsState extends State<RecipeDetails> {
     );
   }
 
-  Widget _buildRecipeDescription() {
-    return const Text(
-      'Recipe Description goes here. Provide details about the recipe and any additional information you want to display.',
-      style: TextStyle(
+  Widget _buildRecipeDescription(String description) {
+    return Text(
+      description,
+      style: const TextStyle(
         fontSize: 16,
         color: Colors.grey,
       ),
     );
   }
 
-  Widget _buildIngredients() {
-    return const Column(
+  Widget _buildIngredients(String ingredients) {
+    // Parse the ingredients string into a list and display them
+    List<String> ingredientList = ingredients.split(', ');
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Ingredients:',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('- 1 large eggplant, diced'),
-            Text('- 1 can (14 oz) diced tomatoes'),
-            Text('- 1/2 cup green olives, sliced'),
-            Text('- 1/4 cup capers'),
-            Text('- 2 tablespoons red wine vinegar'),
-            Text('- 2 tablespoons olive oil'),
-            Text('- Salt and pepper to taste'),
-          ],
+          children: ingredientList
+              .map((ingredient) => Text('- $ingredient'))
+              .toList(),
         ),
       ],
     );
   }
 
-  Widget _buildNutrition() {
-    return const Column(
+  Widget _buildNutrition(String nutrition) {
+    // Parse the nutrition string into a list and display them
+    List<String> nutritionList = nutrition.split(', ');
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Nutrition (per serving):',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('- Calories: 140'),
-            Text('- Protein: 3g'),
-            Text('- Fat: 8g'),
-            Text('- Carbohydrates: 16g'),
-            Text('- Fiber: 6g'),
-          ],
+          children: nutritionList.map((item) => Text('- $item')).toList(),
         ),
       ],
     );

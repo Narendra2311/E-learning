@@ -3,6 +3,7 @@
 import 'dart:io';
 import 'dart:ui';
 import 'package:e_learning/src/home/home_screen.dart';
+import 'package:e_learning/src/service/api.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
@@ -213,7 +214,7 @@ class _SignUpFormState extends State<SignUpForm> {
       final response = await http
           .post(
             Uri.parse(
-                'https://76e3-2402-3a80-8f1-1775-2558-27cf-4ea-b680.ngrok-free.app/register'),
+                '${API.baseUrl}/register'),
             headers: {
               'Content-Type': 'application/json',
             },

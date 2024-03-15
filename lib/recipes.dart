@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 import 'package:e_learning/recipe_details.dart';
+import 'package:e_learning/src/service/api.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -28,7 +29,7 @@ class _RecipesState extends State<Recipes> {
     try {
       final response = await http.get(
         Uri.parse(
-          'https://148c-2405-201-2009-d9ed-f1c1-3eb2-88c7-7fdf.ngrok-free.app/recipes/${widget.subCategoryId}',
+          '${API.baseUrl}/recipes/subcategory/${widget.subCategoryId}',
         ),
       );
 
@@ -91,10 +92,9 @@ class _RecipesState extends State<Recipes> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const RecipeDetails(
-              recipeId: '',
-              //       recipeId: recipe['Recipe_id'].toString(),
-              // subCategoryId: widget.subCategoryId, // Sending subcategory ID
+            builder: (context) => RecipeDetails(
+              subCategoryId: widget.subCategoryId,
+              recipeId: recipe['Recipe_id'].toString(),
             ),
           ),
         );

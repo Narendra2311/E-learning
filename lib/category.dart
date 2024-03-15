@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print, sized_box_for_whitespace, prefer_const_constructors
 
 import 'dart:convert';
+import 'package:e_learning/src/service/api.dart';
 import 'package:e_learning/sub_category.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
@@ -67,7 +68,7 @@ class _CategoryState extends State<Category> {
 
   Future<void> fetchData() async {
     final url = Uri.parse(
-        'https://148c-2405-201-2009-d9ed-f1c1-3eb2-88c7-7fdf.ngrok-free.app/viewcategories');
+        '${API.baseUrl}/viewcategories'); // Use the base URL from API class
 
     try {
       final response = await http.get(url);
