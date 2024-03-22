@@ -24,43 +24,43 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            Image.asset(
-              'assets/images/Avatar.png',
-              width: 90,
-              height: 50,
-            ),
-            const SizedBox(width: 2),
-            const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Hello, Narendra',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 0, 0, 0),
-                    fontFamily: 'serif',
-                  ),
-                ),
-                Text(
-                  'What are you cooking today?',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(color: Colors.white),
-        ),
-        automaticallyImplyLeading: false,
-      ),
+      // appBar: AppBar(
+      //   title: Row(
+      //     children: [
+      //       Image.asset(
+      //         'assets/images/Avatar.png',
+      //         width: 90,
+      //         height: 50,
+      //       ),
+      //       const SizedBox(width: 2),
+      //       const Column(
+      //         crossAxisAlignment: CrossAxisAlignment.start,
+      //         children: [
+      //           Text(
+      //             'Hello, Narendra',
+      //             style: TextStyle(
+      //               fontSize: 18,
+      //               fontWeight: FontWeight.bold,
+      //               color: Color.fromARGB(255, 0, 0, 0),
+      //               fontFamily: 'serif',
+      //             ),
+      //           ),
+      //           Text(
+      //             'What are you cooking today?',
+      //             style: TextStyle(
+      //               fontSize: 12,
+      //               color: Colors.grey,
+      //             ),
+      //           ),
+      //         ],
+      //       ),
+      //     ],
+      //   ),
+      //   flexibleSpace: Container(
+      //     decoration: const BoxDecoration(color: Colors.white),
+      //   ),
+      //   automaticallyImplyLeading: false,
+      // ),
       body: GestureDetector(
         onTap: () {
           // Hide the keyboard when the user taps anywhere on the screen
@@ -80,7 +80,7 @@ class _SearchPageState extends State<SearchPage> {
                 decoration: InputDecoration(
                   hintText: 'Search recipe',
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
+                    borderRadius: BorderRadius.circular(30.0),
                   ),
                 ),
               ),
@@ -90,7 +90,7 @@ class _SearchPageState extends State<SearchPage> {
                 ? const Text(
                     'Popular Search',
                     style: TextStyle(
-                      fontSize: 28,
+                      fontSize: 15,
                       fontWeight: FontWeight.bold,
                     ),
                   )

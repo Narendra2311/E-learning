@@ -1,4 +1,4 @@
-// ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, library_private_types_in_public_api, avoid_print, deprecated_member_use
+// ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, library_private_types_in_public_api, avoid_print, deprecated_member_use, use_build_context_synchronously
 
 import 'dart:io';
 import 'dart:ui';
@@ -6,6 +6,7 @@ import 'package:e_learning/src/home/home_screen.dart';
 import 'package:e_learning/src/service/api.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'sign_in.dart';
@@ -147,7 +148,13 @@ class _SignUpFormState extends State<SignUpForm> {
 
                   if (response['success'] != null && response['success']) {
                     // Registration successful
-                    _showSuccessDialog('Registration success');
+                    _showSuccessDialog(
+                        'Registration success',
+                        response['user']['id'].toString(),
+                        response['user']['token'],
+                        response['user']['full_name'],
+                        response['user']['email_address'],
+                        response['user']['phone_number']);
                   } else {
                     // Registration failed
                     print('Registration failed: ${response['message']}');
@@ -213,8 +220,7 @@ class _SignUpFormState extends State<SignUpForm> {
 
       final response = await http
           .post(
-            Uri.parse(
-                '${API.baseUrl}/register'),
+            Uri.parse('${API.baseUrl}/register'),
             headers: {
               'Content-Type': 'application/json',
             },
@@ -226,6 +232,8 @@ class _SignUpFormState extends State<SignUpForm> {
             }),
           )
           .timeout(timeoutDuration);
+      print('Response status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
 
       if (response.statusCode == 201) {
         final Map<String, dynamic> responseBody = json.decode(response.body);
@@ -279,7 +287,15 @@ class _SignUpFormState extends State<SignUpForm> {
     }
   }
 
-  void _showSuccessDialog(String message) {
+  void _showSuccessDialog(String message, String userId, String token,
+      String name, String email, String contact) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('userId', userId as int);
+    await prefs.setString('token', token);
+    await prefs.setString('name', name); // Store user's name
+    await prefs.setString('email', email); // Store user's email
+    await prefs.setString('contact', contact); // Store user's contact
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -303,7 +319,7 @@ class _SignUpFormState extends State<SignUpForm> {
                     height: 40,
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: Colors.green, // Change color to green for success
+                      color: Colors.green,
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(30.0),
                         topRight: Radius.circular(30.0),
@@ -337,7 +353,7 @@ class _SignUpFormState extends State<SignUpForm> {
                   SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).pop(); // Close the dialog
+                      Navigator.of(context).pop();
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -361,6 +377,12 @@ class _SignUpFormState extends State<SignUpForm> {
         );
       },
     );
+
+    print('Stored UserID: $userId');
+    print('Stored Token: $token');
+    print('Stored Name: $name');
+    print('Stored Email: $email');
+    print('Stored Contact: $contact');
   }
 
   void _showErrorDialog(String message) {

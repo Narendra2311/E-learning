@@ -1,16 +1,14 @@
-// ignore_for_file: use_key_in_widget_constructors
-// import 'package:e_learning/src/auth/sign_in.dart';
-// import 'package:e_learning/recipe_details.dart';
-import 'package:e_learning/src/home/home_screen.dart';
-// import 'package:e_learning/src/home/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'SplashScreen.dart';
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
+      debugShowCheckedModeBanner: false, // Set this property to false
+      home: SplashScreen(),
     );
   }
 }

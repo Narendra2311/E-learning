@@ -1,14 +1,15 @@
-// ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors, library_private_types_in_public_api, use_build_context_synchronously, avoid_print, deprecated_member_use
+// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously, avoid_print
 
 import 'dart:io';
 import 'dart:ui';
+import 'package:e_learning/src/auth/sign_up.dart';
 import 'package:e_learning/src/home/home_screen.dart';
 import 'package:e_learning/src/service/api.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
-import 'sign_up.dart';
 
 class SignInScreen extends StatelessWidget {
   const SignInScreen({super.key});
@@ -44,12 +45,12 @@ class SignInScreen extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
-                  SignInForm(),
-                  SizedBox(height: 20),
+                  const SignInForm(),
+                  const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('Don\'t have an account? '),
+                      const Text('Don\'t have an account? '),
                       GestureDetector(
                         onTap: () {
                           Navigator.push(
@@ -58,7 +59,7 @@ class SignInScreen extends StatelessWidget {
                                 builder: (context) => SignUpScreen()),
                           );
                         },
-                        child: Text(
+                        child: const Text(
                           'Sign Up',
                           style: TextStyle(
                             fontSize: 18,
@@ -79,6 +80,8 @@ class SignInScreen extends StatelessWidget {
 }
 
 class SignInForm extends StatefulWidget {
+  const SignInForm({super.key});
+
   @override
   _SignInFormState createState() => _SignInFormState();
 }
@@ -90,15 +93,13 @@ class _SignInFormState extends State<SignInForm> {
 
   @override
   Widget build(BuildContext context) {
-    // _emailController.text = 'narendra1499@gmail.com';
-    // _passwordController.text = 'Divya@12';
     return SingleChildScrollView(
       child: Form(
         key: _formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
+            const Text(
               'Welcome back!',
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -107,23 +108,23 @@ class _SignInFormState extends State<SignInForm> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 2),
-            Text(
+            const SizedBox(height: 2),
+            const Text(
               'Sign in for a seamless experience.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 15,
-                color: const Color.fromARGB(255, 123, 123, 123),
+                color: Color.fromARGB(255, 123, 123, 123),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             _buildFormFieldWithIcon(
               Icons.email,
               'Email',
               _emailController,
               'xyz@gmail.com',
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             _buildFormFieldWithIcon(
               Icons.lock,
               'Password',
@@ -131,7 +132,7 @@ class _SignInFormState extends State<SignInForm> {
               '**********',
               isPassword: true,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
                 if (_formKey.currentState!.validate()) {
@@ -141,10 +142,11 @@ class _SignInFormState extends State<SignInForm> {
                   );
 
                   if (response['success'] != null && response['success']) {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => HomeScreen()),
+                      MaterialPageRoute(builder: (context) => const HomeScreen()),
                     );
+                    await checkStoredData();
                   } else {
                     print('Sign-in failed: ${response['message']}');
 
@@ -161,9 +163,9 @@ class _SignInFormState extends State<SignInForm> {
               },
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,
-                backgroundColor: Color(0xFFEF6C00),
+                backgroundColor: const Color(0xFFEF6C00),
               ),
-              child: Text('Sign In'),
+              child: const Text('Sign In'),
             ),
           ],
         ),
@@ -177,8 +179,7 @@ class _SignInFormState extends State<SignInForm> {
   ) async {
     try {
       final response = await http.post(
-        Uri.parse(
-            '${API.baseUrl}/clogin'),
+        Uri.parse('${API.baseUrl}/clogin'),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -192,6 +193,17 @@ class _SignInFormState extends State<SignInForm> {
         final Map<String, dynamic> responseBody = json.decode(response.body);
 
         if (responseBody.containsKey('message') && responseBody['success']) {
+          final int userId = responseBody['customerId'];
+          final String token = responseBody['token'];
+          final String name =
+              responseBody['customerName']; // Extract name from response
+          final String email =
+              responseBody['email']; // Extract email from response
+          final String phoneNumber =
+              responseBody['phoneNumber']; // Extract phone number from response
+          // Save user ID, token, name, email, and phone number to local storage
+          saveLoginStatus(userId, token, name, email, phoneNumber);
+
           return {
             'success': true,
             'message': responseBody['message'],
@@ -258,7 +270,7 @@ class _SignInFormState extends State<SignInForm> {
               borderRadius: BorderRadius.circular(20.0),
             ),
             child: Container(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(20.0),
@@ -268,17 +280,17 @@ class _SignInFormState extends State<SignInForm> {
                 children: [
                   Container(
                     height: 40,
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
+                    padding: const EdgeInsets.all(8),
+                    decoration: const BoxDecoration(
                       color: Colors.red,
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(20.0),
                         topRight: Radius.circular(20.0),
                       ),
                     ),
-                    child: Row(
+                    child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
+                      children: [
                         Icon(
                           Icons.error,
                           color: Colors.white,
@@ -287,14 +299,14 @@ class _SignInFormState extends State<SignInForm> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   Text(
                     message,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.black,
                     ),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).pop();
@@ -305,7 +317,7 @@ class _SignInFormState extends State<SignInForm> {
                         borderRadius: BorderRadius.circular(20.0),
                       ),
                     ),
-                    child: Text(
+                    child: const Text(
                       'OK',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
@@ -339,36 +351,36 @@ class _SignInFormState extends State<SignInForm> {
               size: 20,
               color: const Color.fromARGB(255, 138, 137, 137),
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Text(
               label,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 15,
-                color: const Color.fromARGB(255, 123, 123, 123),
+                color: Color.fromARGB(255, 123, 123, 123),
               ),
             ),
           ],
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         TextFormField(
           controller: controller,
           obscureText: isPassword,
           decoration: InputDecoration(
             hintText: hintText,
             labelText: label,
-            labelStyle: TextStyle(
+            labelStyle: const TextStyle(
               color: Colors.black, // Set the label text color to black
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(25.0),
-              borderSide: BorderSide(
+              borderSide: const BorderSide(
                 color: Color(0xFFEF6C00),
               ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(25.0),
-              borderSide: BorderSide(
-                color: const Color.fromARGB(255, 138, 137, 137),
+              borderSide: const BorderSide(
+                color: Color.fromARGB(255, 138, 137, 137),
               ),
             ),
           ),
@@ -381,5 +393,38 @@ class _SignInFormState extends State<SignInForm> {
         ),
       ],
     );
+  }
+
+  // Function to save login status along with user ID and token
+  Future<void> saveLoginStatus(
+    int userId,
+    String token,
+    String name,
+    String email,
+    String phoneNumber,
+  ) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt('userId', userId);
+    prefs.setString('token', token);
+    prefs.setString('name', name); // Store user's name
+    prefs.setString('email', email); // Store user's email
+    prefs.setString('phoneNumber', phoneNumber); // Store user's phone number
+  }
+
+  Future<void> checkStoredData() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      int? userId = prefs.getInt('userId');
+      String? token = prefs.getString('token');
+
+      if (userId != null && token != null) {
+        print('User ID: $userId');
+        print('Token: $token');
+      } else {
+        print('User ID and/or token not found in local storage.');
+      }
+    } catch (e) {
+      print('Error occurred while checking stored data: $e');
+    }
   }
 }

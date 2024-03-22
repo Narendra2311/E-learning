@@ -1,8 +1,10 @@
-// ignore_for_file: unnecessary_import
+// ignore_for_file: unnecessary_import, use_build_context_synchronously, avoid_print
 import 'dart:ui';
+import 'package:e_learning/src/auth/sign_in.dart';
 import 'package:e_learning/src/wishlist/wish_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -15,43 +17,43 @@ class _ProfiletState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            Image.asset(
-              'assets/images/Avatar.png',
-              width: 90,
-              height: 50,
-            ),
-            const SizedBox(width: 2),
-            const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Hello, Narendra',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 0, 0, 0),
-                    fontFamily: 'serif',
-                  ),
-                ),
-                Text(
-                  'What are you cooking today?',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(color: Colors.white),
-        ),
-        automaticallyImplyLeading: false,
-      ),
+      // appBar: AppBar(
+      //   title: Row(
+      //     children: [
+      //       Image.asset(
+      //         'assets/images/Avatar.png',
+      //         width: 90,
+      //         height: 50,
+      //       ),
+      //       const SizedBox(width: 2),
+      //       const Column(
+      //         crossAxisAlignment: CrossAxisAlignment.start,
+      //         children: [
+      //           Text(
+      //             'Hello, Narendra',
+      //             style: TextStyle(
+      //               fontSize: 18,
+      //               fontWeight: FontWeight.bold,
+      //               color: Color.fromARGB(255, 0, 0, 0),
+      //               fontFamily: 'serif',
+      //             ),
+      //           ),
+      //           Text(
+      //             'What are you cooking today?',
+      //             style: TextStyle(
+      //               fontSize: 12,
+      //               color: Colors.grey,
+      //             ),
+      //           ),
+      //         ],
+      //       ),
+      //     ],
+      //   ),
+      //   flexibleSpace: Container(
+      //     decoration: const BoxDecoration(color: Colors.white),
+      //   ),
+      //   automaticallyImplyLeading: false,
+      // ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,38 +71,48 @@ class _ProfiletState extends State<Profile> {
   }
 
   Widget buildImageAndTextSection() {
-    return const Padding(
-      padding: EdgeInsets.all(16.0),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 40.0,
-            backgroundImage: AssetImage('assets/images/Avatar.png'),
-            // backgroundColor: Color(0xFFEF6C00),
-          ),
-          SizedBox(width: 16.0),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Narendra Choudhary",
-                style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: FutureBuilder<String>(
+        future:
+            _getUserName(), // Call the function to get the user's name from local storage
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            // If the data is available, display the user's name
+            return Row(
+              children: [
+                const CircleAvatar(
+                  radius: 40.0,
+                  backgroundImage: AssetImage('assets/images/Avatar.png'),
                 ),
-              ),
-              Text(
-                '@narendra1499',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey,
+                const SizedBox(width: 16.0),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      snapshot.data!, // Display the user's name
+                      style: const TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            );
+          } else {
+            // If data is not available yet, show a loading indicator
+            return const CircularProgressIndicator();
+          }
+        },
       ),
     );
+  }
+
+  Future<String> _getUserName() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('name') ??
+        ''; // Get the user's name from local storage
   }
 
   Widget buildPersonalInfoSection() {
@@ -272,32 +284,29 @@ class _ProfiletState extends State<Profile> {
     );
   }
 
-  void showLogoutConfirmationDialog(BuildContext context) {
+  void showLogoutConfirmationDialog(BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return Stack(
           children: [
-            // Blurred background
             BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
               child: Container(
                 color: Colors.transparent,
               ),
             ),
-            // Actual dialog
             AlertDialog(
-              backgroundColor: Colors.white, // Set background color to white
+              backgroundColor: Colors.white,
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Text(
-                    "Are you sure you want to ",
-                    style: TextStyle(color: Colors.black, fontSize: 20),
-                  ),
-                  const Text(
-                    "to log out ?",
-                    style: TextStyle(color: Colors.black, fontSize: 20),
+                    "Are you sure you want to log out ?",
+                    style: TextStyle(
+                        color: Colors.black, fontSize: 20, fontFamily: 'Serif'),
                   ),
                   const SizedBox(height: 16.0),
                   Row(
@@ -305,7 +314,7 @@ class _ProfiletState extends State<Profile> {
                     children: [
                       ElevatedButton(
                         onPressed: () {
-                          Navigator.of(context).pop(); // Close the dialog
+                          Navigator.of(context).pop();
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFEF6C00),
@@ -318,9 +327,16 @@ class _ProfiletState extends State<Profile> {
                       ),
                       const SizedBox(width: 16.0),
                       ElevatedButton(
-                        onPressed: () {
-                          // Add your logic for logging out here
-                          Navigator.of(context).pop(); // Close the dialog
+                        onPressed: () async {
+                          // Remove all data from local storage
+                          await prefs.clear();
+                          // Print data after clearing
+                          print('Data after clearing: ${prefs.getKeys()}');
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const SignInScreen()),
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,

@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names, deprecated_member_use, avoid_print
+
 import 'package:e_learning/src/service/api.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
@@ -269,7 +271,7 @@ class _RecipeDetailsState extends State<RecipeDetails> {
             ),
             children: [
               TextSpan(
-                text: ' ($cooktime)',
+                text: ' ($cooktime min)',
                 style: const TextStyle(
                   fontSize: 14,
                   color: Color(0xFFEF6C00),
