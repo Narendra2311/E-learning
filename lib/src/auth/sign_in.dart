@@ -144,7 +144,8 @@ class _SignInFormState extends State<SignInForm> {
                   if (response['success'] != null && response['success']) {
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => const HomeScreen()),
+                      MaterialPageRoute(
+                          builder: (context) => const HomeScreen()),
                     );
                     await checkStoredData();
                   } else {
@@ -191,7 +192,7 @@ class _SignInFormState extends State<SignInForm> {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseBody = json.decode(response.body);
-
+        print(responseBody);
         if (responseBody.containsKey('message') && responseBody['success']) {
           final int userId = responseBody['customerId'];
           final String token = responseBody['token'];

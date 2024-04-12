@@ -290,7 +290,7 @@ class _SignUpFormState extends State<SignUpForm> {
   void _showSuccessDialog(String message, String userId, String token,
       String name, String email, String contact) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('userId', userId as int);
+    await prefs.setInt('userId', int.parse(userId));
     await prefs.setString('token', token);
     await prefs.setString('name', name); // Store user's name
     await prefs.setString('email', email); // Store user's email

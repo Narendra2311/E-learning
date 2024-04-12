@@ -1,10 +1,66 @@
 // ignore_for_file: sized_box_for_whitespace
 
-import 'package:e_learning/category.dart';
+import 'package:e_learning/category.dart'
+    as categoryModel; // Rename category.dart to avoid conflict
+import 'package:e_learning/recipe_details.dart';
+import 'package:e_learning/src/service/api.dart';
+import 'package:e_learning/sub_category.dart';
+import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'dart:async';
 import 'subscription_plans.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+class Recipe {
+  final int id;
+  final String title;
+  final String description;
+  final String thumbnailUrl;
+  final int subCategoryId;
+  final String cookingTime;
+
+  Recipe({
+    required this.id,
+    required this.title,
+    required this.description,
+    required this.thumbnailUrl,
+    required this.subCategoryId,
+    required this.cookingTime,
+  });
+
+  factory Recipe.fromJson(Map<String, dynamic> json) {
+    return Recipe(
+      id: json['Recipe_id'],
+      title: json['Recipe_Title'],
+      description: json['Recipe_Description'],
+      thumbnailUrl: json['Recipe_Thumbnail'],
+      subCategoryId: json['Sub_Category_id'],
+      cookingTime: json['Recipe_Cooking_Time'],
+    );
+  }
+}
+
+class Category {
+  final int id;
+  final String name;
+  final String thumbnailUrl;
+
+  Category({
+    required this.id,
+    required this.name,
+    required this.thumbnailUrl,
+  });
+
+  factory Category.fromJson(Map<String, dynamic> json) {
+    return Category(
+      id: json['Category_id'],
+      name: json['Category_Name'],
+      thumbnailUrl: json['Category_Thumbnail'],
+    );
+  }
+}
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,7 +71,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
-  late TabController _popularCategoryTabController;
+  List<Recipe> trendingRecipes = [];
+  List<Category> categories = [];
+
   final PageController _bannerPageController = PageController(
     viewportFraction: 1.0,
     initialPage: 100,
@@ -26,10 +84,8 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
-    _popularCategoryTabController = TabController(
-      length: 6,
-      vsync: this,
-    );
+    fetchDataFromApi();
+
     _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
       _bannerPageController.nextPage(
         duration: const Duration(milliseconds: 500),
@@ -47,130 +103,39 @@ class _HomePageState extends State<HomePage>
     });
   }
 
+  Future<void> fetchDataFromApi() async {
+    final recipeUrl = Uri.parse('${API.baseUrl}/recipes/featured');
+    final categoryUrl = Uri.parse('${API.baseUrl}/viewcategories');
+
+    final recipeResponse = await http.get(recipeUrl);
+    final categoryResponse = await http.get(categoryUrl);
+
+    if (recipeResponse.statusCode == 200 &&
+        categoryResponse.statusCode == 200) {
+      final List<dynamic> recipeData = jsonDecode(recipeResponse.body);
+      final List<dynamic> categoryData = jsonDecode(categoryResponse.body);
+
+      setState(() {
+        trendingRecipes =
+            recipeData.map((data) => Recipe.fromJson(data)).toList();
+        categories =
+            categoryData.map((data) => Category.fromJson(data)).toList();
+      });
+    } else {
+      throw Exception('Failed to load data from API');
+    }
+  }
+
   @override
   void dispose() {
-    _popularCategoryTabController.dispose();
     _bannerPageController.dispose();
     _timer.cancel();
     super.dispose();
   }
 
-  List<Widget> generateCardsForCategory(String category) {
-    // Replace this with your logic to fetch data based on the category
-    List<String> dishNames = [
-      '$category 1',
-      '$category 2',
-      '$category 3',
-      '$category 4',
-      '$category 5',
-    ];
-
-    return List.generate(5, (index) {
-      return Container(
-        width: 160,
-        margin: const EdgeInsets.symmetric(horizontal: 8),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(12),
-          child: Stack(
-            children: [
-              // FancyShimmerImage(
-              //   imageUrl: 'assets/food/$category$index.jpg',
-              //   width: 250,
-              //   boxFit: BoxFit.cover,
-              //   height: 350,
-              //   errorWidget: Container(
-              //     height: 150.0, // Set the height to match the container
-              //     width:
-              //         double.infinity, // Set the width to match the container
-              //     child: Image.asset(
-              //       "assets/images/error.png",
-              //       fit: BoxFit.cover,
-              //     ),
-              //   ),
-              // ),
-              Image.asset(
-                'assets/food/$category$index.jpg',
-                width: 250,
-                fit: BoxFit.cover,
-                height: 350,
-              ),
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-                      colors: [
-                        Colors.black.withOpacity(1.0),
-                        Colors.transparent,
-                      ],
-                    ),
-                  ),
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 18, horizontal: 10),
-                  child: Center(
-                    child: Text(
-                      dishNames[index],
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Serif',
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Row(
-      //     children: [
-      //       Image.asset(
-      //         'assets/images/Avatar.png',
-      //         width: 90,
-      //         height: 50,
-      //       ),
-      //       const SizedBox(width: 2),
-      //       const Column(
-      //         crossAxisAlignment: CrossAxisAlignment.start,
-      //         children: [
-      //           Text(
-      //             'Hello, Narendra',
-      //             style: TextStyle(
-      //               fontSize: 18,
-      //               fontWeight: FontWeight.bold,
-      //               color: Color.fromARGB(255, 0, 0, 0),
-      //               fontFamily: 'serif',
-      //             ),
-      //           ),
-      //           Text(
-      //             'What are you cooking today?',
-      //             style: TextStyle(
-      //               fontSize: 12,
-      //               color: Colors.grey,
-      //             ),
-      //           ),
-      //         ],
-      //       ),
-      //     ],
-      //   ),
-      //   flexibleSpace: Container(
-      //     decoration: const BoxDecoration(color: Colors.white),
-      //   ),
-      //   automaticallyImplyLeading: false,
-      // ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -188,46 +153,6 @@ class _HomePageState extends State<HomePage>
       ),
     );
   }
-
-  // Widget buildAppBar() {
-  //   return AppBar(
-  //     title: Row(
-  //       children: [
-  //         Image.asset(
-  //           'assets/images/Avatar.png',
-  //           width: 90,
-  //           height: 50,
-  //         ),
-  //         const SizedBox(width: 2),
-  //         Column(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           children: const [
-  //             Text(
-  //               'Hello, Narendra',
-  //               style: TextStyle(
-  //                 fontSize: 18,
-  //                 fontWeight: FontWeight.bold,
-  //                 color: Color.fromARGB(255, 0, 0, 0),
-  //                 fontFamily: 'serif',
-  //               ),
-  //             ),
-  //             Text(
-  //               'What are you cooking today?',
-  //               style: TextStyle(
-  //                 fontSize: 12,
-  //                 color: Colors.grey,
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //       ],
-  //     ),
-  //     flexibleSpace: Container(
-  //       decoration: const BoxDecoration(color: Colors.white),
-  //     ),
-  //     automaticallyImplyLeading: false,
-  //   );
-  // }
 
   Widget buildBannerSection() {
     return Column(
@@ -290,27 +215,30 @@ class _HomePageState extends State<HomePage>
   }
 
   Widget buildTrendingSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 20),
-        const Padding(
-          padding: EdgeInsets.only(),
-          child: Row(
-            children: [
-              Text(
-                "Trending 🔥",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+    return Visibility(
+      visible: trendingRecipes.isNotEmpty,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 20),
+          const Padding(
+            padding: EdgeInsets.only(),
+            child: Row(
+              children: [
+                Text(
+                  "Trending Recipe 🔥",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        const SizedBox(height: 16),
-        buildTrendingCards(),
-      ],
+          const SizedBox(height: 16),
+          buildTrendingCards(),
+        ],
+      ),
     );
   }
 
@@ -319,121 +247,100 @@ class _HomePageState extends State<HomePage>
       height: 320,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: 4,
+        itemCount: trendingRecipes.length,
         itemBuilder: (context, index) {
-          List<String> dishNames = [
-            'Spaghetti Bolognese',
-            'Chicken Alfredo',
-            'Vegetable Stir-Fry',
-            'Chocolate Cake',
-          ];
-
-          return Container(
-            width: 180,
-            margin: const EdgeInsets.only(right: 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: 220,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8.0),
-                    image: DecorationImage(
-                      image: AssetImage(
-                        index == 0
-                            ? 'assets/food/food1.jpg'
-                            : index == 1
-                                ? 'assets/food/food2.jpg'
-                                : index == 2
-                                    ? 'assets/food/food3.jpg'
-                                    : 'assets/food/food4.jpg',
-                      ),
-                      fit: BoxFit.cover,
-                    ),
+          Recipe recipe = trendingRecipes[index];
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RecipeDetails(
+                    recipeId: recipe.id.toString(),
+                    subCategoryId: recipe.subCategoryId.toString(),
                   ),
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        top: 8,
-                        left: 8,
-                        child: Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 254, 170, 0),
-                            borderRadius: BorderRadius.circular(9),
-                          ),
-                          child: const Row(
-                            children: [
-                              Icon(
-                                Icons.star,
-                                color: Colors.white,
-                                size: 14,
-                              ),
-                              SizedBox(width: 4),
-                              Text(
-                                '4.5',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
+                ),
+              );
+            },
+            child: Container(
+              width: 180,
+              margin: const EdgeInsets.only(right: 8),
+              child: Card(
+                color: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: Container(
+                            height: 220,
+                            child: FancyShimmerImage(
+                              imageUrl: recipe.thumbnailUrl,
+                              boxFit: BoxFit.cover,
+                              errorWidget: Container(
+                                color: Colors.grey[300],
+                                child: Center(
+                                  child: Icon(
+                                    Icons.error_outline,
+                                    color: Colors.red,
+                                  ),
                                 ),
                               ),
-                            ],
+                            ),
                           ),
                         ),
-                      ),
-                      Positioned.fill(
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.black.withOpacity(0.6),
-                            ),
-                            child: IconButton(
-                              icon: const Icon(
+                        Positioned.fill(
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.black.withOpacity(0.6),
+                              ),
+                              child: Icon(
                                 Icons.play_arrow,
                                 color: Colors.white,
                               ),
-                              onPressed: () {
-                                // Add functionality to play the video
-                              },
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 5),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      '1 hour 30 minutes',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Color.fromARGB(255, 245, 4, 4),
+                      ],
+                    ),
+                    SizedBox(height: 8),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Text(
+                        recipe.title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'serif',
+                        ),
                       ),
                     ),
-                    IconButton(
-                      icon: const Icon(
-                        Icons.favorite_border,
-                        color: Color.fromARGB(255, 158, 20, 20),
+                    SizedBox(height: 4),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Text(
+                        recipe.description,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey[600],
+                        ),
                       ),
-                      onPressed: () {
-                        // Add functionality for favorite button
-                      },
                     ),
                   ],
                 ),
-                Text(
-                  dishNames[index],
-                  style: const TextStyle(
-                    fontSize: 12,
-                  ),
-                ),
-              ],
+              ),
             ),
           );
         },
@@ -450,7 +357,7 @@ class _HomePageState extends State<HomePage>
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Expanded(
+              Expanded(
                 child: Text(
                   "Popular Category",
                   style: TextStyle(
@@ -462,9 +369,8 @@ class _HomePageState extends State<HomePage>
               buildSeeAllLink(),
             ],
           ),
-          const SizedBox(height: 8),
-          buildPopularCategoryTabs(),
-          buildPopularCategoryCard(),
+          SizedBox(height: 8),
+          buildCategoryCards(),
         ],
       ),
     );
@@ -475,11 +381,11 @@ class _HomePageState extends State<HomePage>
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const Category()),
+          MaterialPageRoute(builder: (context) => categoryModel.Category()),
         );
       },
-      child: const Row(
-        children: [
+      child: Row(
+        children: const [
           Text(
             "See all",
             style: TextStyle(
@@ -497,59 +403,91 @@ class _HomePageState extends State<HomePage>
     );
   }
 
-  Widget buildPopularCategoryTabs() {
-    return Container(
-      padding: const EdgeInsets.only(left: 0),
-      child: DefaultTabController(
-        length: 6, // Adjust the length based on the number of tabs
-        child: TabBar(
-          controller: _popularCategoryTabController,
-          isScrollable: true,
-          tabs: const [
-            Tab(text: 'Fruits'),
-            Tab(text: 'Fast Food'),
-            Tab(text: 'Indian'),
-            Tab(text: 'Italian'),
-            Tab(text: 'Chinese'),
-            Tab(text: 'Desserts'),
-          ],
-          indicatorColor: const Color(0xFFEF6C00),
-          indicatorWeight: 3,
-          labelColor: Colors.orange[800],
-          unselectedLabelColor: Colors.grey[600],
-          labelStyle: const TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.bold,
-          ),
-          unselectedLabelStyle: const TextStyle(fontSize: 16),
-        ),
-      ),
-    );
-  }
-
-  Widget buildPopularCategoryCard() {
+  Widget buildCategoryCards() {
     return SizedBox(
       height: 200,
-      child: TabBarView(
-        controller: _popularCategoryTabController,
-        children: [
-          buildPopularCategoryCards('Fruits'),
-          buildPopularCategoryCards('Fast Food'),
-          buildPopularCategoryCards('Indian'),
-          buildPopularCategoryCards('Italian'),
-          buildPopularCategoryCards('Chinese'),
-          buildPopularCategoryCards('Desserts'),
-        ],
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: categories.length,
+        itemBuilder: (context, index) {
+          final category = categories[index];
+          return buildCategoryCard(category);
+        },
       ),
     );
   }
 
-  Widget buildPopularCategoryCards(String category) {
-    return Container(
-      height: 300,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        children: generateCardsForCategory(category),
+  Widget buildCategoryCard(Category category) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                SubCategoryPage(categoryId: category.id.toString()),
+          ),
+        );
+      },
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: SizedBox(
+          width: 170,
+          height: 200,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(16),
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                FancyShimmerImage(
+                  imageUrl: category.thumbnailUrl,
+                  boxFit: BoxFit.cover,
+                  errorWidget: Container(
+                    color: Colors.grey[300],
+                    child: Center(
+                      child: Icon(
+                        Icons.error_outline,
+                        color: Colors.red,
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    padding: EdgeInsets.all(18),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                        colors: [
+                          Colors.black.withOpacity(1.0),
+                          Colors.transparent,
+                        ],
+                      ),
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(16),
+                        bottomRight: Radius.circular(16),
+                      ),
+                    ),
+                    child: Text(
+                      category.name,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

@@ -59,7 +59,7 @@ class _SplashScreenState extends State<SplashScreen> {
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
                 child: Container(
-                  padding: const EdgeInsets.all(90.0),
+                  padding: const EdgeInsets.all(120.0),
                   color: Colors.black.withOpacity(0.5),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,

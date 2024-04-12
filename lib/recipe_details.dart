@@ -49,10 +49,11 @@ class RecipeDetails extends StatefulWidget {
   final String recipeId;
 
   const RecipeDetails({
-    super.key,
+    Key? key,
     required this.subCategoryId,
     required this.recipeId,
-  });
+  }) : super(key: key);
+  
 
   @override
   State<RecipeDetails> createState() => _RecipeDetailsState();

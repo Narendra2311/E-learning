@@ -93,7 +93,7 @@ class _RecipesState extends State<Recipes> {
           context,
           MaterialPageRoute(
             builder: (context) => RecipeDetails(
-              subCategoryId: widget.subCategoryId,
+              subCategoryId: widget.subCategoryId.toString(),
               recipeId: recipe['Recipe_id'].toString(),
             ),
           ),

@@ -103,7 +103,7 @@ class _SearchPageState extends State<SearchPage> {
                       itemBuilder: (context, index) {
                         return _buildRecipeCard(
                           _recipeNames[index],
-                          'assets/food/recipe${index + 1}.jpg', // Change image path
+                          'assets/food/recipe${index + 1}.jpg',
                           '4.${index + 1}',
                         );
                       },
@@ -116,7 +116,7 @@ class _SearchPageState extends State<SearchPage> {
                             itemBuilder: (context, index) {
                               return _buildRecipeCard(
                                 _searchResults[index],
-                                'assets/food/recipe${index + 1}.jpg', // Change image path
+                                'assets/food/recipe${index + 1}.jpg',
                                 '4.${index + 1}',
                               );
                             },
@@ -151,7 +151,7 @@ class _SearchPageState extends State<SearchPage> {
             Image.asset(
               imagePath,
               fit: BoxFit.cover,
-              width: 360,
+              width: 400,
               height: 130,
             ),
             Positioned.fill(
