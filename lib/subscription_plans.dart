@@ -62,7 +62,7 @@ class _SubscriptionState extends State<subscription_plan> {
             right: 16.0,
             child: Center(
               child: SizedBox(
-                width: 250.0, // Adjust the width as needed
+                width: 250.0,
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 7.0),
                   decoration: BoxDecoration(
@@ -108,7 +108,7 @@ class _SubscriptionState extends State<subscription_plan> {
               padding: const EdgeInsets.only(bottom: 80.0),
               child: ClipRect(
                 child: Container(
-                  width: 100.0, // Set your desired fixed width
+                  width: 100.0,
                   child: SmoothPageIndicator(
                     controller: _pageController,
                     count: numCards,
@@ -167,7 +167,7 @@ class _SubscriptionState extends State<subscription_plan> {
   }
 
   Widget buildPlanCard(int index) {
-    List<String> planNames = ['Bronze', 'Silver', 'Gold'];
+    List<String> planNames = ['Silver', 'Gold', 'Diamond'];
     List<Color> backgroundColors = [
       Colors.white,
       Colors.white,
@@ -181,14 +181,14 @@ class _SubscriptionState extends State<subscription_plan> {
 
     List<String> prices = [
       '\u20B9 499',
-      '\u20B9 999',
-      '\u20B9 1499',
+      '\u20B9 599',
+      '\u20B9 699',
     ];
 
     List<String> durations = [
-      'for 1 month',
-      'for 6 month',
-      'for 1 year',
+      '1 month validity',
+      '6 month validity',
+      '1 year validity',
     ];
 
     List<List<Map<String, dynamic>>> features = [

@@ -2,7 +2,7 @@
 import 'dart:ui';
 import 'package:e_learning/src/auth/sign_in.dart';
 import 'package:e_learning/src/profile/edit_info.dart';
-import 'package:e_learning/src/wishlist/wish_list.dart';
+import 'package:e_learning/src/wishlist/favourites.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -134,14 +134,14 @@ class _ProfiletState extends State<Profile> {
               () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => EditInfo()),
+              MaterialPageRoute(builder: (context) => const EditInfo()),
             );
           }),
           buildButton(
               "Wishlist", Icons.favorite, Icons.arrow_forward_ios_rounded, () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const WishList()),
+              MaterialPageRoute(builder: (context) => const Favourites()),
             );
           }),
         ],

@@ -1,7 +1,7 @@
 import 'package:e_learning/homepage.dart';
 import 'package:e_learning/src/profile/profile.dart';
 import 'package:e_learning/src/search/search.dart';
-import 'package:e_learning/src/wishlist/wish_list.dart';
+import 'package:e_learning/src/wishlist/favourites.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: IndexedStack(
         index: _index,
-        children: const [HomePage(), SearchPage(), WishList(), Profile()],
+        children: const [HomePage(), SearchPage(), Favourites(), Profile()],
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,

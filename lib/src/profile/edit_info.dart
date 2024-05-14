@@ -1,7 +1,9 @@
+// ignore_for_file: use_super_parameters, avoid_unnecessary_containers, sized_box_for_whitespace
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart'; // Import the image_picker package
+import 'package:image_picker/image_picker.dart'; 
 
 class EditInfo extends StatefulWidget {
   const EditInfo({Key? key}) : super(key: key);
@@ -25,16 +27,16 @@ class _EditInfoState extends State<EditInfo> {
           child: Wrap(
             children: [
               ListTile(
-                leading: Icon(Icons.camera_alt),
-                title: Text('Click Photo'),
+                leading: const Icon(Icons.camera_alt),
+                title: const Text('Click Photo'),
                 onTap: () {
                   _openCamera(); // Call the function to open the camera
                   Navigator.pop(context); // Close the bottom sheet
                 },
               ),
               ListTile(
-                leading: Icon(Icons.photo_library),
-                title: Text('Choose from Photo Library'),
+                leading: const Icon(Icons.photo_library),
+                title: const Text('Choose from Photo Library'),
                 onTap: () {
                   _openImagePicker(); // Call the function to open photo library
                   Navigator.pop(context); // Close the bottom sheet
@@ -76,10 +78,10 @@ class _EditInfoState extends State<EditInfo> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Personal Info'),
+        title: const Text('Edit Personal Info'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -100,12 +102,12 @@ class _EditInfoState extends State<EditInfo> {
                     child: GestureDetector(
                       onTap: _handleEditIconPress,
                       child: Container(
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           shape: BoxShape.circle,
                           color: Colors.grey,
                         ),
-                        padding: EdgeInsets.all(1), // Adjust padding here
-                        child: Icon(
+                        padding: const EdgeInsets.all(1), // Adjust padding here
+                        child: const Icon(
                           Icons.edit,
                           color: Colors.white,
                         ),
@@ -114,7 +116,7 @@ class _EditInfoState extends State<EditInfo> {
                   ),
                 ],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: nameController,
                 decoration: InputDecoration(
@@ -122,16 +124,16 @@ class _EditInfoState extends State<EditInfo> {
                   floatingLabelBehavior:
                       FloatingLabelBehavior.never, // <- Don't move hint text up
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFFEF6C00)),
+                    borderSide: const BorderSide(color: Color(0xFFEF6C00)),
                     borderRadius: BorderRadius.circular(25.0),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFFEF6C00)),
+                    borderSide: const BorderSide(color: Color(0xFFEF6C00)),
                     borderRadius: BorderRadius.circular(25.0),
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: emailController,
                 decoration: InputDecoration(
@@ -139,16 +141,16 @@ class _EditInfoState extends State<EditInfo> {
                   floatingLabelBehavior:
                       FloatingLabelBehavior.never, // <- Don't move hint text up
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFFEF6C00)),
+                    borderSide: const BorderSide(color: Color(0xFFEF6C00)),
                     borderRadius: BorderRadius.circular(25.0),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFFEF6C00)),
+                    borderSide: const BorderSide(color: Color(0xFFEF6C00)),
                     borderRadius: BorderRadius.circular(25.0),
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: phoneNumberController,
                 decoration: InputDecoration(
@@ -156,27 +158,27 @@ class _EditInfoState extends State<EditInfo> {
                   floatingLabelBehavior:
                       FloatingLabelBehavior.never, // <- Don't move hint text up
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFFEF6C00)),
+                    borderSide: const BorderSide(color: Color(0xFFEF6C00)),
                     borderRadius: BorderRadius.circular(25.0),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFFEF6C00)),
+                    borderSide: const BorderSide(color: Color(0xFFEF6C00)),
                     borderRadius: BorderRadius.circular(25.0),
                   ),
                 ),
               ),
-              SizedBox(height: 40),
+              const SizedBox(height: 40),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
-                  backgroundColor: Color(0xFFEF6C00),
+                  backgroundColor: const Color(0xFFEF6C00),
                 ),
                 onPressed: () {
                   // Add functionality to save changes here
                 },
-                child: Text('Save Changes'),
+                child: const Text('Save Changes'),
               ),
-              SizedBox(height: 20), // Additional space after the button
+              const SizedBox(height: 20), // Additional space after the button
             ],
           ),
         ),

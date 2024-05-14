@@ -1,4 +1,4 @@
-// ignore_for_file: sized_box_for_whitespace
+// ignore_for_file: sized_box_for_whitespace, library_prefixes
 
 import 'package:e_learning/category.dart'
     as categoryModel; // Rename category.dart to avoid conflict
@@ -284,7 +284,8 @@ class _HomePageState extends State<HomePage>
                               boxFit: BoxFit.cover,
                               errorWidget: Container(
                                 color: Colors.grey[300],
-                                child: Center(
+                                
+                                child: const Center(
                                   child: Icon(
                                     Icons.error_outline,
                                     color: Colors.red,
@@ -302,7 +303,7 @@ class _HomePageState extends State<HomePage>
                                 shape: BoxShape.circle,
                                 color: Colors.black.withOpacity(0.6),
                               ),
-                              child: Icon(
+                              child: const Icon(
                                 Icons.play_arrow,
                                 color: Colors.white,
                               ),
@@ -311,7 +312,7 @@ class _HomePageState extends State<HomePage>
                         ),
                       ],
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       child: Text(
@@ -325,7 +326,7 @@ class _HomePageState extends State<HomePage>
                         ),
                       ),
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       child: Text(
@@ -357,7 +358,7 @@ class _HomePageState extends State<HomePage>
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(
+              const Expanded(
                 child: Text(
                   "Popular Category",
                   style: TextStyle(
@@ -369,7 +370,7 @@ class _HomePageState extends State<HomePage>
               buildSeeAllLink(),
             ],
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           buildCategoryCards(),
         ],
       ),
@@ -381,11 +382,11 @@ class _HomePageState extends State<HomePage>
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => categoryModel.Category()),
+          MaterialPageRoute(builder: (context) => const categoryModel.Category()),
         );
       },
-      child: Row(
-        children: const [
+      child: const Row(
+        children: [
           Text(
             "See all",
             style: TextStyle(
@@ -445,7 +446,7 @@ class _HomePageState extends State<HomePage>
                   boxFit: BoxFit.cover,
                   errorWidget: Container(
                     color: Colors.grey[300],
-                    child: Center(
+                    child: const Center(
                       child: Icon(
                         Icons.error_outline,
                         color: Colors.red,
@@ -458,7 +459,7 @@ class _HomePageState extends State<HomePage>
                   left: 0,
                   right: 0,
                   child: Container(
-                    padding: EdgeInsets.all(18),
+                    padding: const EdgeInsets.all(18),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         begin: Alignment.bottomCenter,
@@ -468,14 +469,14 @@ class _HomePageState extends State<HomePage>
                           Colors.transparent,
                         ],
                       ),
-                      borderRadius: BorderRadius.only(
+                      borderRadius: const BorderRadius.only(
                         bottomLeft: Radius.circular(16),
                         bottomRight: Radius.circular(16),
                       ),
                     ),
                     child: Text(
                       category.name,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -513,8 +514,7 @@ class _HomePageState extends State<HomePage>
               buildSubscriptionPlanLink(),
             ],
           ),
-          const SizedBox(height: 8), // Add some space between text and links
-
+          const SizedBox(height: 8),
           buildSubscriptionPlanCard(),
         ],
       ),
@@ -572,7 +572,7 @@ class _HomePageState extends State<HomePage>
                 height: 400,
                 width: 200,
                 child: Image.asset(
-                  'assets/combo_image/combo1.png', // Replace with the actual image path
+                  'assets/combo_image/combo1.png',
                   width: double.infinity,
                   height: double.infinity,
                   fit: BoxFit.fill,
@@ -600,7 +600,7 @@ class _HomePageState extends State<HomePage>
                 height: 400,
                 width: 200,
                 child: Image.asset(
-                  'assets/combo_image/combo2.png', // Replace with the actual image path
+                  'assets/combo_image/combo2.png',
                   width: double.infinity,
                   height: double.infinity,
                   fit: BoxFit.fill,
@@ -628,7 +628,7 @@ class _HomePageState extends State<HomePage>
                 height: 400,
                 width: 200,
                 child: Image.asset(
-                  'assets/combo_image/combo3.png', // Replace with the actual image path
+                  'assets/combo_image/combo3.png',
                   width: double.infinity,
                   height: double.infinity,
                   fit: BoxFit.fill,

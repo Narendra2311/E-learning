@@ -370,7 +370,7 @@ class _SignInFormState extends State<SignInForm> {
             hintText: hintText,
             labelText: label,
             labelStyle: const TextStyle(
-              color: Colors.black, // Set the label text color to black
+              color: Colors.black, 
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(25.0),
@@ -407,9 +407,9 @@ class _SignInFormState extends State<SignInForm> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt('userId', userId);
     prefs.setString('token', token);
-    prefs.setString('name', name); // Store user's name
-    prefs.setString('email', email); // Store user's email
-    prefs.setString('phoneNumber', phoneNumber); // Store user's phone number
+    prefs.setString('name', name); 
+    prefs.setString('email', email); 
+    prefs.setString('phoneNumber', phoneNumber); 
   }
 
   Future<void> checkStoredData() async {

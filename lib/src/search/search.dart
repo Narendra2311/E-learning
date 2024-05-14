@@ -24,43 +24,6 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Row(
-      //     children: [
-      //       Image.asset(
-      //         'assets/images/Avatar.png',
-      //         width: 90,
-      //         height: 50,
-      //       ),
-      //       const SizedBox(width: 2),
-      //       const Column(
-      //         crossAxisAlignment: CrossAxisAlignment.start,
-      //         children: [
-      //           Text(
-      //             'Hello, Narendra',
-      //             style: TextStyle(
-      //               fontSize: 18,
-      //               fontWeight: FontWeight.bold,
-      //               color: Color.fromARGB(255, 0, 0, 0),
-      //               fontFamily: 'serif',
-      //             ),
-      //           ),
-      //           Text(
-      //             'What are you cooking today?',
-      //             style: TextStyle(
-      //               fontSize: 12,
-      //               color: Colors.grey,
-      //             ),
-      //           ),
-      //         ],
-      //       ),
-      //     ],
-      //   ),
-      //   flexibleSpace: Container(
-      //     decoration: const BoxDecoration(color: Colors.white),
-      //   ),
-      //   automaticallyImplyLeading: false,
-      // ),
       body: GestureDetector(
         onTap: () {
           // Hide the keyboard when the user taps anywhere on the screen
@@ -101,11 +64,8 @@ class _SearchPageState extends State<SearchPage> {
                     child: ListView.builder(
                       itemCount: _recipeNames.length,
                       itemBuilder: (context, index) {
-                        return _buildRecipeCard(
-                          _recipeNames[index],
-                          'assets/food/recipe${index + 1}.jpg',
-                          '4.${index + 1}',
-                        );
+                        return _buildRecipeCard(_recipeNames[index],
+                            'assets/food/recipe${index + 1}.jpg');
                       },
                     ),
                   )
@@ -114,11 +74,8 @@ class _SearchPageState extends State<SearchPage> {
                         ? ListView.builder(
                             itemCount: _searchResults.length,
                             itemBuilder: (context, index) {
-                              return _buildRecipeCard(
-                                _searchResults[index],
-                                'assets/food/recipe${index + 1}.jpg',
-                                '4.${index + 1}',
-                              );
+                              return _buildRecipeCard(_searchResults[index],
+                                  'assets/food/recipe${index + 1}.jpg');
                             },
                           )
                         : const Center(
@@ -138,7 +95,7 @@ class _SearchPageState extends State<SearchPage> {
         .toList();
   }
 
-  Widget _buildRecipeCard(String name, String imagePath, String rating) {
+  Widget _buildRecipeCard(String name, String imagePath) {
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
@@ -166,34 +123,6 @@ class _SearchPageState extends State<SearchPage> {
                       Colors.transparent,
                     ],
                   ),
-                ),
-              ),
-            ),
-            Positioned(
-              top: 10,
-              left: 10,
-              child: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 250, 183, 39),
-                  borderRadius: BorderRadius.circular(18),
-                ),
-                child: Row(
-                  children: [
-                    const Icon(
-                      Icons.star,
-                      color: Colors.white,
-                      size: 16,
-                    ),
-                    const SizedBox(width: 5),
-                    Text(
-                      rating,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
                 ),
               ),
             ),

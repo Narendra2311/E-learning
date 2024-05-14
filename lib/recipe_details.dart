@@ -32,7 +32,7 @@ class Recipedetails {
   factory Recipedetails.fromJson(Map<String, dynamic> json) {
     return Recipedetails(
       id: json['Recipe_id']?.toString() ??
-          'N/A', // Ensure that id is converted to string
+          'N/A',
       title: json['Recipe_Title'] as String? ?? '',
       description: json['Recipe_Description'] as String? ?? '',
       imageUrl: json['Recipe_Thumbnail'] as String? ?? '',
@@ -49,10 +49,10 @@ class RecipeDetails extends StatefulWidget {
   final String recipeId;
 
   const RecipeDetails({
-    Key? key,
+    super.key,
     required this.subCategoryId,
     required this.recipeId,
-  }) : super(key: key);
+  });
   
 
   @override

@@ -1,4 +1,4 @@
 class API {
   static const String baseUrl =
-      'https://8729-2402-3a80-16a3-52f4-dd68-755a-9140-6b3.ngrok-free.app';
+      'https://4a4d-2402-3a80-e66-1e2e-94b7-6701-ba1e-23f5.ngrok-free.app';
 }
