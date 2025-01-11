@@ -4,6 +4,14 @@ A new Flutter project.
 
 ## Getting Started
 
+An e-learning mobile application developed using **Flutter**. This app provides users with a platform to explore and access educational resources efficiently. 
+
+## Key Features
+- User-friendly interface for students and instructors.
+- Browse and enroll in various courses.
+- Track learning progress with a dashboard.
+- Seamless experience across multiple devices.
+  
 This project is a starting point for a Flutter application.
 
 A few resources to get you started if this is your first Flutter project:
