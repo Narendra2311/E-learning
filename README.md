@@ -27,7 +27,7 @@ An e-learning mobile application developed using **Flutter**. This app provides 
 ![Search Page](screenshots/Search%20page.jpg)
 
 ### 5. Category Page
-![Category Page](screenshots/Category%20page.png)
+![Category Page](Screenshot/Category page.png)
 
 ### 6. Subcategory and Dish Page
 ![Subcategory and Dish Page](screenshots/Subcategory%20%26%20Dish%20page.png)
