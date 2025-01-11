@@ -15,25 +15,25 @@ An e-learning mobile application developed using **Flutter**. This app provides 
 ## Screenshots
 
 ### 1. Home Page
-![Home Page](screenshots/Homepage.png)
+![Home Page](Homepage.png)
 
 ### 2. Sign-In and Sign-Up Page
-![Sign-In and Sign-Up Page](screenshots/Sign-In%20and%20Up%20page.png)
+![Sign-In and Sign-Up Page](Sign-In%20and%20Up%20page.png)
 
 ### 3. Profile Page
-![Profile Page](screenshots/Profile%20page.png)
+![Profile Page](Profile%20page.png)
 
 ### 4. Search Page
-![Search Page](screenshots/Search%20page.jpg)
+![Search Page](Search%20page.jpg)
 
 ### 5. Category Page
-![Category Page](Screenshot/Category page.png)
+![Category Page](Category%20page.png)
 
 ### 6. Subcategory and Dish Page
-![Subcategory and Dish Page](screenshots/Subcategory%20%26%20Dish%20page.png)
+![Subcategory and Dish Page](Subcategory%20%26%20Dish%20page.png)
 
 ### 7. Subscription Page
-![Subscription Page](screenshots/Subscription%20page.png)
+![Subscription Page](Subscription%20page.png)
 
 
 This project is a starting point for a Flutter application.
