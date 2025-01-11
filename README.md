@@ -1,10 +1,6 @@
-# e_learning
+## E-Learning App 📚
+The E-Learning App is a mobile application developed using Flutter that aims to provide users with a seamless platform to access educational content and enhance their learning experience. This app is designed with a focus on usability, functionality, and intuitive navigation to cater to the needs of both students and instructors.
 
-A new Flutter project.
-
-## Getting Started
-
-An e-learning mobile application developed using **Flutter**. This app provides users with a platform to explore and access educational resources efficiently. 
 
 ## Key Features
 - User-friendly interface for students and instructors.
